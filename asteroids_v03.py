@@ -5,7 +5,7 @@ import time
 import music
 
 
-# Music
+# music
 music.play(music.ENTERTAINER, wait = False, loop = True)
 
 #CONSTANTES
@@ -55,6 +55,8 @@ while True:
     sleep(SLEEP_TIME)
     
     display.clear()
+# angry Face
 display.show(Image.ANGRY)
 
+# music
 music.play(music.FUNERAL, wait = False, loop = True)
