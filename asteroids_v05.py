@@ -15,12 +15,34 @@ SLEEP_TIME = 10
 GAME_MUSIC = music.ENTERTAINER
 DIED_MUSIC = music.FUNERAL
 SHOW_SCORE_SPLEEP= 3000
+POSSIBLE_SPAWN_RATE = 500 # in ms
+SPAWN_RARETY = 10 #in percent
 
 #VARIABLES
-player_pos = round(DISPLAY_X/2)
+first_player_pos = round(DISPLAY_X/2)
 current_time = 0
 alive = True
-round_starting_time = 0
+round_starting_time = current_time
+last_spawn = current_time
+#list with all asteroids in it
+asteroids = []
+
+
+# Defines the class Player
+class Player():
+    def __init__(self, _x, _y):
+        self.x = _x
+        self.y = _y
+    
+    def display(self):
+        display.set_pixel(self.x, self.y, LIGHT_PLAYER)
+
+    def update(self):#checks for pressed buttons and updates
+        if button_a.get_presses() and self.x > 0:
+            self.x -= 1
+        if button_b.get_presses() and self.x < DISPLAY_X - 1:
+            self.x += 1
+        
 
 # Defines the class Asteroid
 class Asteroid():
@@ -29,6 +51,7 @@ class Asteroid():
         self.y = _y
         self.speed = _speed
         self.l_u = _l_u
+        self.dead = False
     # updates the asteroid and respwans him
     def update(self):
         if current_time - self.l_u > self.speed:
@@ -40,14 +63,10 @@ class Asteroid():
                 self.y = 0
                 self.speed = randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED)
                 self.l_u = current_time
-
-#ASTEROIDS
-a_1 = Asteroid(randint(0, DISPLAY_X-1), 0, randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED), 0)
-a_2 = Asteroid(randint(0, DISPLAY_X-1), 0, randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED), 0)
-a_3 = Asteroid(randint(0, DISPLAY_X-1), 0, randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED), 0)
-a_4 = Asteroid(randint(0, DISPLAY_X-1), 0, randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED), 0)
-# puts all astroids in a list
-asteroids = [a_1, a_2, a_3, a_4]
+    def display(self):
+        display.set_pixel(self.x, self.y, LIGHT_ASTEROID)
+# spawnes a player
+player = Player(first_player_pos, DISPLAY_Y - 1)
 
 # Music
 music.play(GAME_MUSIC, wait = False, loop = True)
@@ -58,25 +77,28 @@ while True:
         # get current time
         current_time = time.ticks_ms()
 
+        #spawn
+        if current_time - last_spawn >= POSSIBLE_SPAWN_RATE and randint(0,100) < SPAWN_RARETY:
+            asteroid = Asteroid(randint(0,DISPLAY_X-1), 0, randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED), current_time)
+            asteroids.append(asteroid)
+            last_spawn = current_time
+
         # update asteroids
         for asteroid in asteroids:
             asteroid.update()
 
         # update player
-        if button_a.get_presses() and player_pos > 0:
-            player_pos -= 1
-        if button_b.get_presses() and player_pos < DISPLAY_X - 1:
-            player_pos += 1
+        player.update()
 
         #collision check
         for asteroid in asteroids:
-            if asteroid.x == player_pos and asteroid.y == DISPLAY_Y - 1:
-                alive = False
+            if asteroid.x == player.x and asteroid.y == DISPLAY_Y - 1:
+                    alive = False
             
         # display update
-        for asteroid in asteroids: #checks for each astroid's position
-            display.set_pixel(asteroid.x, asteroid.y, LIGHT_ASTEROID)
-        display.set_pixel(player_pos,DISPLAY_Y - 1, LIGHT_PLAYER)
+        for asteroid in asteroids:
+            asteroid.display()
+        player.display()
 
         #sleep
         sleep(SLEEP_TIME)
@@ -95,10 +117,10 @@ while True:
                 break
             
         #set variables to default
-        player_pos = 2
-        current_time = 0
+        round_starting_time = time.ticks_ms()
         alive = True
-        round_starting_time = current_time
+        last_spawn = time.ticks_ms()
+        asteroids = []
 
         
 
