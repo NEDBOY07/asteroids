@@ -121,7 +121,3 @@ while True:
         alive = True
         last_spawn = time.ticks_ms()
         asteroids = []
-
-        
-
-        
