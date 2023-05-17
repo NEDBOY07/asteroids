@@ -6,7 +6,7 @@ import music
 
 #CONSTANTES
 ASTEROID_MAX_SPEED = 400
-ASTEROID_MIN_SPEED = 200
+ASTEROID_MIN_SPEED = 100
 DISPLAY_X = 5
 DISPLAY_Y = 5
 LIGHT_PLAYER = 9
@@ -16,7 +16,7 @@ GAME_MUSIC = music.ENTERTAINER
 DIED_MUSIC = music.FUNERAL
 SHOW_SCORE_SPLEEP= 3000
 POSSIBLE_SPAWN_RATE = 500 # in ms
-SPAWN_RARETY = 10 #in percent
+SPAWN_RARETY = 40 #in percent
 
 #VARIABLES
 first_player_pos = round(DISPLAY_X/2)
@@ -58,11 +58,6 @@ class Asteroid():
             if self.y < DISPLAY_Y - 1:
                 self.y += 1
                 self.l_u = current_time
-            else: # spawning the asteroid at the top
-                self.x = randint(0, DISPLAY_X - 1)
-                self.y = 0
-                self.speed = randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED)
-                self.l_u = current_time
     def display(self):
         display.set_pixel(self.x, self.y, LIGHT_ASTEROID)
 # spawnes a player
@@ -85,6 +80,8 @@ while True:
 
         # update asteroids
         for asteroid in asteroids:
+            if asteroid.y == DISPLAY_Y - 1:
+                asteroids.remove(asteroid)
             asteroid.update()
 
         # update player
