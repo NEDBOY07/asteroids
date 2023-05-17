@@ -37,10 +37,10 @@ class Player():
     def display(self):
         display.set_pixel(self.x, self.y, LIGHT_PLAYER)
 
-    def update(self):#checks for pressed buttons and updates
-        if button_a.get_presses() and self.x > 0:
+    def update(self, left):#checks for pressed buttons and updates
+        if left:
             self.x -= 1
-        if button_b.get_presses() and self.x < DISPLAY_X - 1:
+        if not left:
             self.x += 1
         
 
@@ -85,8 +85,10 @@ while True:
             asteroid.update()
 
         # update player
-        player.update()
-
+        if button_a.get_presses():
+            player.update(True)
+        if button_b.get_presses():
+            player.update(False)
         #collision check
         for asteroid in asteroids:
             if asteroid.x == player.x and asteroid.y == DISPLAY_Y - 1:
