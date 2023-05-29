@@ -40,6 +40,7 @@ class Game:
         self.player = Player(int(self.DIS_x / 2)) # create player and attache to Game-class as attribute
         self.asteroids = [] # also create empty list for asteroids
         self.current_time = get_time_in_ms()
+        self.round_starting_time = self.current_time
         self.POSSIBLE_SPAWN_RATE = 500
         self.SPAWNRARETY = 100
         self.ASTEROID_MIN_SPEED = 100
