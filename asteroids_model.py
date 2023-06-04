@@ -28,31 +28,30 @@ class Asteroid:
         self.dead = False
 
     def update(self):# updatesthe asteroid
-        if self.current_time - self.l_u > self.speed:
-            if self.y < self.DIS - 1:
-                self.y += 1
-                self.l_u = self.current_time
+        if get_time_in_ms() - self.l_u > self.speed:
+            self.y += 1
+            self.l_u = time
  
 class Game:
     def __init__(self, _dis_x, _dis_y): # pass game settings as parameters
         self.DIS_X = _dis_x
         self.DIS_Y = _dis_y
-        self.player = Player(int(self.DIS_x / 2)) # create player and attache to Game-class as attribute
+        self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1) # create player and attache to Game-class as attribute
         self.asteroids = [] # also create empty list for asteroids
         self.current_time = get_time_in_ms()
         self.round_starting_time = self.current_time
         self.POSSIBLE_SPAWN_RATE = 500
-        self.SPAWNRARETY = 100
+        self.SPAWN_RARETY = 100
         self.ASTEROID_MIN_SPEED = 100
         self.ASTEROID_MAX_SPEED = 300
         self.last_spawn = 0
  
     def spawn_asteroids(self):
         #spawn
-        if Game.current_time - last_spawn >= self.POSSIBLE_SPAWN_RATE and self.randint(0,100) < self.SPAWN_RARETY:
-            asteroid = Asteroid(randint(0,self.DIS_X-1), 0, randint(self.ASTEROID_MIN_SPEED, self.ASTEROID_MAX_SPEED), self.current_time)
+        if self.current_time - self.last_spawn >= self.POSSIBLE_SPAWN_RATE and randint(0,100) < self.SPAWN_RARETY:
+            asteroid = Asteroid(randint(0,self.DIS_X-1), 0, randint(self.ASTEROID_MIN_SPEED, self.ASTEROID_MAX_SPEED),self.current_time)
             self.asteroids.append(asteroid)
-            self.last_spawn = self.current_time
+            self.last_spawn = get_time_in_ms()
  
     def update_asteroids(self):
         for asteroid in self.asteroids:
