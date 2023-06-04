@@ -30,28 +30,35 @@ class Asteroid:
     def update(self):# updatesthe asteroid
         if get_time_in_ms() - self.l_u > self.speed:
             self.y += 1
-            self.l_u = time
+            self.l_u = get_time_in_ms()
  
 class Game:
     def __init__(self, _dis_x, _dis_y): # pass game settings as parameters
+        #Const
         self.DIS_X = _dis_x
         self.DIS_Y = _dis_y
-        self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1) # create player and attache to Game-class as attribute
-        self.asteroids = [] # also create empty list for asteroids
-        self.current_time = get_time_in_ms()
-        self.round_starting_time = self.current_time
         self.POSSIBLE_SPAWN_RATE = 500
         self.SPAWN_RARETY = 100
         self.ASTEROID_MIN_SPEED = 100
         self.ASTEROID_MAX_SPEED = 300
+        
+        # variables
+        self.current_time = get_time_in_ms()
+        self.round_starting_time = self.current_time
         self.last_spawn = 0
+        
+        # player and asteroids
+        self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1) # create player and attache to Game-class as attribute
+        self.asteroids = [] # create empty list for asteroids
+        
  
     def spawn_asteroids(self):
         #spawn
-        if self.current_time - self.last_spawn >= self.POSSIBLE_SPAWN_RATE and randint(0,100) < self.SPAWN_RARETY:
+        if get_time_in_ms() - self.last_spawn >= self.POSSIBLE_SPAWN_RATE and randint(0,100) < self.SPAWN_RARETY:
             asteroid = Asteroid(randint(0,self.DIS_X-1), 0, randint(self.ASTEROID_MIN_SPEED, self.ASTEROID_MAX_SPEED),self.current_time)
             self.asteroids.append(asteroid)
             self.last_spawn = get_time_in_ms()
+            print("spawn")
  
     def update_asteroids(self):
         for asteroid in self.asteroids:
@@ -65,4 +72,7 @@ class Game:
             if asteroid.x == self.player.x and asteroid.y == self.DIS_Y - 1:
                 return True
         return False
-    
+
+    def get_time(self):
+        time = get_time_in_ms()
+        return time

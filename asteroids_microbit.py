@@ -35,7 +35,8 @@ while True:
         
 
     else: # game over display
-        display.show(round((game.current_time - game.round_starting_time) / 10000))
+        survived_time = int((game.get_time() - game.round_starting_time)/1000)
+        display.scroll(int(survived_time))
         sleep(SHOW_SCORE_SLEEP)
         display.show(DEAD_IMAGE)
         music.play(DIED_MUSIC, wait = False, loop = True)
@@ -45,9 +46,9 @@ while True:
                 break
             
         #set variables to default
-        round_starting_time = game.current_time.ticks_ms()
+        round_starting_time = game.get_time()
         alive = True
-        last_spawn = game.current_time.ticks_ms()
+        last_spawn = game.get_time()
         asteroids = []
 
         
