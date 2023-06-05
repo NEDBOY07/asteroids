@@ -46,6 +46,7 @@ class Game:
         self.current_time = get_time_in_ms()
         self.round_starting_time = self.current_time
         self.last_spawn = 0
+        alive = True
         
         # player and asteroids
         self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1) # create player and attache to Game-class as attribute
@@ -60,7 +61,7 @@ class Game:
             self.last_spawn = get_time_in_ms()
             print("spawn")
  
-    def update_asteroids(self):
+    def update_asteroid(self):
         for asteroid in self.asteroids:
             if asteroid.y == self.DIS_Y -1:
                 self.asteroids.remove(asteroid)

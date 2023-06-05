@@ -33,7 +33,6 @@ while True:
         sleep(SLEEP)
         display.clear()
         
-
     else: # game over display
         survived_time = int((game.get_time() - game.round_starting_time)/1000)
         display.scroll(int(survived_time))
@@ -43,14 +42,8 @@ while True:
         # check for pin_logo
         while True:
             if pin_logo.is_touched():
+                round_starting_time = game.get_time()
+                last_spawn = game.get_time()
+                asteroids = []
                 break
-            
-        #set variables to default
-        round_starting_time = game.get_time()
-        alive = True
-        last_spawn = game.get_time()
-        asteroids = []
-
-        
-    
-
+                #set variables to default
