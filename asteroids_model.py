@@ -9,14 +9,15 @@ def get_time_in_ms():# gets systemtime
     return time.time()*1000
  
 class Player:
-    def __init__(self, _x, _y):#defines player
+    def __init__(self, _x, _y, _dis_x):#defines player
         self.x = _x
         self.y = _y
+        self.dis_x = _dis_x
 
     def update(self, left):#updates the player
-        if left:
+        if left and self.x > 0:
             self.x -= 1
-        else:
+        elif not left and self.x < self.dis_x - 1:
             self.x += 1
  
 class Asteroid:
@@ -37,10 +38,10 @@ class Game:
         #Const
         self.DIS_X = _dis_x
         self.DIS_Y = _dis_y
-        self.POSSIBLE_SPAWN_RATE = 500
-        self.SPAWN_RARETY = 100
-        self.ASTEROID_MIN_SPEED = 100
-        self.ASTEROID_MAX_SPEED = 300
+        self.POSSIBLE_SPAWN_RATE = 200
+        self.SPAWN_RARETY = 60
+        self.ASTEROID_MIN_SPEED = 200
+        self.ASTEROID_MAX_SPEED = 400
         
         # variables
         self.current_time = get_time_in_ms()
@@ -49,7 +50,7 @@ class Game:
         alive = True
         
         # player and asteroids
-        self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1) # create player and attache to Game-class as attribute
+        self.player = Player(int(self.DIS_X / 2), self.DIS_Y - 1, self.DIS_X) # create player and attache to Game-class as attribute
         self.asteroids = [] # create empty list for asteroids
         
  
@@ -59,15 +60,13 @@ class Game:
             asteroid = Asteroid(randint(0,self.DIS_X-1), 0, randint(self.ASTEROID_MIN_SPEED, self.ASTEROID_MAX_SPEED),self.current_time)
             self.asteroids.append(asteroid)
             self.last_spawn = get_time_in_ms()
-            print("spawn")
  
-    def update_asteroid(self):
+    def update_asteroids(self):
         for asteroid in self.asteroids:
             if asteroid.y == self.DIS_Y -1:
                 self.asteroids.remove(asteroid)
             asteroid.update()
             
- 
     def is_player_colliding(self):
         for asteroid in self.asteroids:
             if asteroid.x == self.player.x and asteroid.y == self.DIS_Y - 1:
