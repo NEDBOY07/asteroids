@@ -15,8 +15,8 @@ game = Game(DIS_x, DIS_y)
 while True:
     if not game.is_player_colliding():
         # model
-        game.spawn_asteroids()
         game.update_asteroids()
+        game.spawn_asteroids()
         if button_a.get_presses():
             game.player.update(True)
         if button_b.get_presses():

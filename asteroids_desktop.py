@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLa
 from PyQt5.QtGui import QColor
 from PyQt5.QtCore import Qt,QTimer
  
-N_COLUMNS = 8
+N_COLUMNS = 20
 N_ROWS = 7
 
 game = Game(N_COLUMNS, N_ROWS)
@@ -85,10 +85,12 @@ class GridApp(QWidget):
         # Update the necessary data or trigger actions as needed
         if not game.is_player_colliding():
         # model
-            game.spawn_asteroids()
             game.update_asteroids()
+            game.spawn_asteroids()
+
         else: # game over display
-            survived_time = int((game.get_time() - game.round_starting_time)/1000)
+            game.asteroids = []
+            game.player.x = int(N_COLUMNS/2)
         self.draw_all_cells()
 
 

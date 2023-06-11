@@ -39,7 +39,7 @@ class Game:
         self.DIS_X = _dis_x
         self.DIS_Y = _dis_y
         self.POSSIBLE_SPAWN_RATE = 200
-        self.SPAWN_RARETY = 60
+        self.SPAWN_RARETY = 20 * self.DIS_X
         self.ASTEROID_MIN_SPEED = 200
         self.ASTEROID_MAX_SPEED = 400
         
