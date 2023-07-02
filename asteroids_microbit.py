@@ -6,17 +6,18 @@ DIS_x = 5
 DIS_y = 5
 PLAYER_BRIGHTNESS = 9
 ASTEROID_BRIGHTNESS = 5
-SHOW_SCORE_SLEEP = 3000
 DEAD_IMAGE = Image.ANGRY
 DIED_MUSIC = music.FUNERAL
 SLEEP = 20
 game = Game(DIS_x, DIS_y)
+alive = True
 
 while True:
-    if not game.is_player_colliding():
+    if alive:
         # model
         game.spawn_asteroids()
         game.update_asteroids()
+        
         if button_a.get_presses():
             game.player.update(True)
         if button_b.get_presses():
@@ -30,20 +31,22 @@ while True:
         # display player
         display.set_pixel(game.player.x, game.player.y, PLAYER_BRIGHTNESS)
 
+        if game.is_player_colliding():
+            alive = False
+
         sleep(SLEEP)
         display.clear()
         
     else: # game over display
-        survived_time = int((game.get_time() - game.round_starting_time)/1000)
-        display.scroll(int(survived_time))
-        sleep(SHOW_SCORE_SLEEP)
+        survived_time = round((game.get_time() - game.round_starting_time)/1000)
+        display.scroll(survived_time)
         display.show(DEAD_IMAGE)
         music.play(DIED_MUSIC, wait = False, loop = True)
         # check for pin_logo
         while True:
-            if pin_logo.is_touched():
-                round_starting_time = game.get_time()
-                last_spawn = game.get_time()
-                asteroids = []
+            if pin_logo.is_touched():#set variables to default
                 break
-                #set variables to default
+        game.round_starting_time = game.get_time()
+        last_spawn = game.get_time()
+        asteroids = []
+        alive = True

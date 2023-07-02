@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLa
 from PyQt5.QtGui import QColor
 from PyQt5.QtCore import Qt,QTimer
  
-N_COLUMNS = 4
-N_ROWS = 7
+N_COLUMNS = 20
+N_ROWS = 10
 
 game = Game(N_COLUMNS, N_ROWS)
  
@@ -59,30 +59,39 @@ class GridApp(QWidget):
     def draw_all_cells(self):
         for y in range(self.ROWS):
             for x in range(self.COLUMNS):
-                rnd_color = QColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                self.draw_cell_at_position(x,y,rnd_color)
+                asteroids = list(filter(lambda a : a.x == x and a.y == y, game.asteroids))
+                if len(asteroids) == 0:
+                    color = QColor(255,255,255)
+                    if x == game.player.x and y == game.player.y:
+                        color = QColor(0,255,0)
+                else:
+                    color = QColor(255,0,0)
+                self.draw_cell_at_position(x,y,color)
 
- 
     def keyPressEvent(self, event):
         """
         deals with keypressed events
         """
         key = event.key()
-        if key == Qt.Key_Up:
+        if key == Qt.Key_Left:
             game.player.update(True)
-        elif key == Qt.Key_Down:
+        elif key == Qt.Key_Right:
             game.player.update(False)
         self.draw_all_cells()
+        if game.is_player_colliding():
+            sys.exit(app.exec_())
  
     def update(self):
         # Perform your periodic check here
         # This function will be called every ... ms (value in self.timer.start(...))
         # Update the necessary data or trigger actions as needed
-        for asteroid in game.asteroids:
-            GridApp.draw_cell_at_position(asteroid.x, asteroid.y, QColor("red"))
-        GridApp.draw_cell_at_position(game.player.x, game.player.y, QColor("green"))
- 
+        game.update_asteroids()
+        game.spawn_asteroids()
+        if game.is_player_colliding(): # game over display
+            sys.exit(app.exec_())
+        self.draw_all_cells()
 if __name__ == '__main__':
+    game = Game(N_COLUMNS, N_ROWS)
     app = QApplication(sys.argv)
     grid_app = GridApp()
     sys.exit(app.exec_())
