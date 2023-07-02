@@ -13,6 +13,7 @@ class Player:
         self.x = _x
         self.y = _y
         self.dis_x = _dis_x
+        self.dis_x = _dis_x
 
     def update(self, left):#updates the player
         if left and self.x > 0:

@@ -15,7 +15,6 @@ alive = True
 while True:
     if alive:
         # model
-        game.spawn_asteroids()
         game.update_asteroids()
         
         if button_a.get_presses():
